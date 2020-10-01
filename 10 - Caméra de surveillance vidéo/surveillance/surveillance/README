@@ -1,0 +1,24 @@
+###########Prérequis############
+vlc
+une raspbian mise à jour
+################################
+
+
+##########Installation##########
+sudo apt-get install -y vlc
+sudo sed -i 's/geteuid/getppid/g' `which vlc`    	# permet d'exécuter vlc en tant que root
+################################
+
+
+#######copie des scripts########
+sudo cp camera /usr/bin/                    		# ce script est chargé de lancer raspivid et de diffuser le flux sur le réseau grâce à vlc
+sudo cp camerad /etc/init.d/                		# script de démarrage du service
+
+sudo chmod a+x /usr/bin/camera              		# activer les droits d'exécution aux scripts
+sudo chmod a+x /etc/init.d/camerad
+
+sudo update-rc.d camerad defaults          		# cette commande sert à lancer le script au démarrage du système
+################################
+
+
+#Sinon exécuter le script "script_configuration" (en root) qui fera toutes ces étapes automatiquement
