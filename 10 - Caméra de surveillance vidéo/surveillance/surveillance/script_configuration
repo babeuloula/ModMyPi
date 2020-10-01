@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ $EUID != 0 ]
+then
+	echo "Ce script doit être exécuter en tant que root."
+	exit -1
+fi
+
+
+#########################################
+#         Installation de vlc           #
+#########################################
+
+apt-get install -y vlc
+
+sed -i 's/geteuid/getppid/g' `which vlc`   # cette commande sert à rendre vlc exécutable par le root
+
+#########################################
+#          copie des scripts            #
+#########################################
+
+cp camera /usr/bin/
+cp camerad /etc/init.d/
+
+#########################################
+#     rendre les scripts exécutable     #
+#########################################
+
+
+chmod a+x /usr/bin/camera
+chmod a+x /etc/init.d/camerad
+
+update-rc.d camerad defaults   # cette commande sert à lancer le script au démarrage du système
+
+exit 0

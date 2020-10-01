@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Création du dossier qui contiendra le fichier de logs
+if [ ! -d "/var/log/camera" ]    
+then
+	mkdir /var/log/camera 
+fi
+
+#  Capture du flux de la camera et sa diffusion sur le réseau
+raspivid -t 0 -w 800 -h 600 -fps 25  -b 200000 -o - | cvlc -vvv stream:///dev/stdin --sout '#standard{access=http,mux=ts,dst=:8554}' :demux=h264 2> /var/log/camera/camera.log

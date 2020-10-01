@@ -1,0 +1,33 @@
+#!/bin/bash
+# script pour enregistrer les flux des cameras dans un fichier
+
+if [ "$#" != 2 ]
+then
+	echo "Nombre d'arguments incorrect"
+	echo "Usage: ./CamSave http://adresse_RPI:8554/  /home/user/Bureau/"	      
+	exit -1;
+fi
+
+
+while [ 1 ];
+do
+	fichier=`date +"%d_%m_%Y-%H:%M:%S.mp4"`
+	repertoire=`date +"%d_%m_%Y/"`
+	if [ ! -d "$2$repertoire" ]
+	then
+		mkdir $2$repertoire
+	fi
+	cvlc $1 --run-time=600 --sout file/ts:$2$repertoire$fichier vlc://quit  >>  /var/log/camera/CamSave.log 2>&1  &
+	sleep 580
+
+	fichier=`date +"%d_%m_%Y-%H:%M:%S.mp4"`
+	repertoire=`date +"%d_%m_%Y/"`
+        if [ ! -d "$2$repertoire" ]
+	then
+                mkdir $2$repertoire
+        fi
+	cvlc $1 --run-time=600 --sout file/ts:$2$repertoire$fichier vlc://quit  >>  /var/log/camera/CamSave.log 2>&1  &
+	sleep 580
+done
+
+exit 0
